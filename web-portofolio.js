@@ -1,81 +1,95 @@
-// ================
-// MOBILE MENU
-// ================
- const menuBtn = document.getElementById('menu-btn');
- const navMenu = document.getElementById('nav-menu');
 
- menuBtn.addEventListener("click", function() {
-    navMenu.classList.toggle("active");
- });
+// MENU RESPONSIVE
+const menuBtn = document.getElementById("menuBtn");
+const navMenu = document.getElementById("navMenu");
 
+menuBtn.addEventListener("click", function () {
+    navMenu.classList.toggle("show");
 
- // ================
- // CLOSE MENU
- // ================
-const navLinks = document.querySelectorAll('.navmenu a');
-navLinks.forEach(function(link) {
-    link.addEventListener("click", function() {
-        navMenu.classList.remove("active");
+    if (navMenu.classList.contains("show")) {
+        menuBtn.textContent = "✕";
+    } else {
+        menuBtn.textContent = "☰";
+    }
+});
+
+// TUTUP MENU SAAT LINK DIKLIK
+const navLinks = document.querySelectorAll("#navMenu a");
+
+navLinks.forEach(function (link) {
+    link.addEventListener("click", function () {
+        navMenu.classList.remove("show");
+        menuBtn.textContent = "☰";
     });
 });
 
-// ====================
-// SCROLL ANIMATION
-// =====================
+// ANIMASI SAAT SCROLL
+const animatedElements = document.querySelectorAll(
+    ".hero-content, .hero-card, .section-title, " +
+    ".photo-frame, .paper, .portofolio-card, .contact-item"
+);
 
-const sections = document.querySelectorAll('section');
+animatedElements.forEach(function (element) {
+    element.classList.add("reveal");
+});
 
 const observer = new IntersectionObserver(
-    function(entries) {
-        entries.forEach(function(entry) {
+    function (entries) {
+        entries.forEach(function (entry) {
             if (entry.isIntersecting) {
-                entry.target.classList.add('show');
-            } 
-
+                entry.target.classList.add("visible");
+                observer.unobserve(entry.target);
+            }
         });
-
     },
     {
         threshold: 0.15
     }
-);  
+);
 
-
-sections.forEach(function(section) {
-    observer.observe(section);
-
+animatedElements.forEach(function (element) {
+    observer.observe(element);
 });
 
-// =====================
-// BUTTON EFFECT
-// =====================
+// EFEK KLIK KARTU PROYEK
+const projectCards = document.querySelectorAll(".portofolio-card");
 
-const buttons = document.querySelectorAll('.btn');
-buttons.forEach(function(button) {
-    button.addEventListener("click", function() {
-        button.style.transform = "scale(0.95)";
-        setTimeout(function() {
-            button.style.transform = "";
+projectCards.forEach(function (card) {
+    card.addEventListener("mouseenter", function () {
+        card.classList.add("card-active");
+    });
 
-        }, 150);
-
+    card.addEventListener("mouseleave", function () {
+        card.classList.remove("card-active");
     });
 });
 
+// TAHUN FOOTER OTOMATIS
+const footerText = document.querySelector("footer p");
 
-// ========================
-// PROJECT LINK
-// ========================
+if (footerText) {
+    footerText.textContent = footerText.textContent.replace(
+        /2026/g,
+        new Date().getFullYear()
+    );
+}
 
-const projectButtons=
-    document.querySelectorAll('.project-btn');
+// TOMBOL KEMBALI KE ATAS
+const backToTop = document.createElement("button");
 
-projectButtons.forEach(function(button) {
-    button.addEventListener("click", function() {
-        button.style.transform = "scale(0.95)";
-        setTimeout(function() {
-            button.style.transform = "";
+backToTop.className = "back-to-top";
+backToTop.textContent = "↑";
+backToTop.setAttribute("aria-label", "Kembali ke atas");
 
-        }, 150);
+document.body.appendChild(backToTop);
+
+window.addEventListener("scroll", function () {
+    backToTop.classList.toggle("show", window.scrollY > 350);
+});
+
+backToTop.addEventListener("click", function () {
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
     });
 });
